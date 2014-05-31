@@ -2,8 +2,8 @@
 var App = (function (App, $) {
   App.alarmData={}; //old alarm data to compare against new data and determining whether tables need to be updated
   App.diData={};  //old data items data to compare against new data and determining whether tables need to be updated
-	App.modelNumber="wind_mill"
-	App.serialNumber="wind_mill_6"
+	App.modelNumber="nuclear_reactor"
+	App.serialNumber="reactor_1"
 	App.outsideData1=[]
 	App.diffData=[]
   App.powerValues = null;
@@ -31,13 +31,6 @@ var App = (function (App, $) {
 
     App.powerCallback = function(data) {
       App.powerValues = data
-    }
-
-    App.totaller = function() {
-      var stotal = $('#solar_percent').val()=="" ? 0: parseFloat($('#solar_percent').val());
-      var wtotal = $('#wind_percent').val()=="" ? 0: parseFloat($('#wind_percent').val());
-      var ntotal = $('#nuclear_percent').val()=="" ? 0: parseFloat($('#nuclear_percent').val());
-      $('#totals').html(stotal + wtotal + ntotal);
     }
 
 
@@ -185,8 +178,10 @@ var App = (function (App, $) {
       max: 100,
       value: 5,
       change: function (event, ui) {
-        $('#solar_percent').val(ui.value * App.powerValues.solarOutput)
-        App.totaller()
+        var num_plants = 10;
+        var totalPower = ui.value * App.powerValues.solarOutput * num_plants
+        $('#solar_percent').val(totalPower)
+        $('#solar_bar').width((100*totalPower/20000000000) + "%")
       }
     });
     $("#wind").slider({
@@ -194,8 +189,10 @@ var App = (function (App, $) {
       max: 100,
       value: 5,
       change: function (event, ui) {
-        $('#wind_percent').val(ui.value * App.powerValues.windOutput)
-        App.totaller()
+        var num_plants = 200;
+        var totalPower = ui.value * App.powerValues.windOutput * num_plants
+        $('#wind_percent').val(totalPower)
+        $('#wind_bar').width((100*totalPower/20000000000) + "%")
       }
     });
     $("#nuclear").slider({
@@ -203,8 +200,9 @@ var App = (function (App, $) {
       max: 100,
       value: 5,
       change: function (event, ui) {
-        $('#nuclear_percent').val(ui.value * App.powerValues.nuclearOutput)
-        App.totaller()
+        var totalPower = ui.value * App.powerValues.nuclearOutput
+        $('#nuclear_percent').val(totalPower)
+        $('#nuclear_bar').width((100*totalPower/20000000000) + "%")
       }
     });
   }
